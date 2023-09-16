@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { sample } from "./backend/sample/sample";
+import './popup.css'; 
 
 const Popup = () => {
   const [summaryPoints, setSummaryPoints] = useState<{ rating: number, text: string }[]>();
@@ -20,7 +21,7 @@ const Popup = () => {
 
   return (
     <>
-      <div style={{ minWidth: "600px", minHeight: "400px" }}>
+      <div className="w-[600px] h-[400px] bg-blue-300">
         <h1>Terms Summary</h1>
         <ul>
         {summaryPoints?.map((point) => {
