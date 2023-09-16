@@ -12,8 +12,8 @@ export async function apiCall(pageText:string) {
     messages: [
       {
         "role": "system",
-        // "content": "The input given should be terms and condition, a privacy policy, or something similar. Summarize the terms into concise bullet points to make it easier to understand."
-        "content": "There may be some red flags in the provided terms of service/terms of privacy. Summarize some points that may be adverse to a users privacy they may not be aware of into concise bullet points to make it easier to understand. Two examples for facebook are \"Facebook stores your data whether you have an account or not. \" and \"Your identity is used in ads that are shown to other users\". Be blunt and avoid being vague."
+        "content": "The input given should be terms and condition, a privacy policy, or something similar. Summarize the terms into concise bullet points to make it easier to understand. Be sure to highlight anything that impacts a user's privacy or rights that they should be aware of. Make sure the answer is not too long, and is easy to understand."
+        // "content": "There may be some red flags in the provided terms of service/terms of privacy. Summarize some points that may be adverse to a users privacy they may not be aware of into concise bullet points to make it easier to understand. Two examples for facebook are \"Facebook stores your data whether you have an account or not. \" and \"Your identity is used in ads that are shown to other users\". Be blunt and avoid being vague."
       },
       {
         "role": "user",
@@ -21,13 +21,13 @@ export async function apiCall(pageText:string) {
       }
     ],
     temperature: 1,
-    max_tokens: 3000,
+    max_tokens: 10000,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
   });
 
-  console.log(response);
+  console.log(response.choices[0].message.content);
 
   // const response2 = await openai.chat.completions.create({
   //   model: "gpt-3.5-turbo-16k",
@@ -87,9 +87,8 @@ export async function getSummary(pageText: string) {
 
   const responses: string[] = [];
 
-  let apiCallResult = await apiCall(pageText);
-  console.log("This will be the substring")
-  console.log(pageText.substring(0,7000))
+  let apiCallResult = await apiCall(pageText.substring(0,20000));
+  
   if (apiCallResult) {
     responses.push(apiCallResult);
   }
@@ -131,9 +130,9 @@ export async function getSummary(pageText: string) {
 
 
 
-export async function getRating(bulletPoints: string) {
+export async function getRating(bulletPoints: string): Promise<1 | 2 | 3 | 0> {
   const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: "gpt-3.5-turbo-16k",
     messages: [
       {
         "role": "system",
@@ -149,41 +148,20 @@ export async function getRating(bulletPoints: string) {
       }
     ],
     temperature: 1,
-    max_tokens: 3000,
+    max_tokens: 5000,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
   });
 
-  return response.choices[0].message.content;
-}
-
-
-
-
-export async function getRating(bulletPoints: string) {
-  const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        "role": "system",
-        "content": "Take these bullet points summarizing some terms of service and respond with just the number \"1\" if everything looks good. Respond with just \"2\" if there are some concerns which users should be aware of and take a closer look. Respond with just \"3\" if there are big red flags and concerns that could be potentially malicious. Only respond with a single number and nothing else."
-      },
-      {
-        "role": "user",
-        "content": bulletPoints
-      },
-      {
-        "role": "assistant",
-        "content": "1"
-      }
-    ],
-    temperature: 1,
-    max_tokens: 3000,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-  });
-
-  return response.choices[0].message.content;
+  let ratingString = response.choices[0].message.content || "2";
+  if (ratingString === "1") {
+    return 1;
+  } else if (ratingString === "2") {
+    return 2;
+  } else if (ratingString === "3") {
+    return 3;
+  } else {
+    return 0;
+  }
 }
