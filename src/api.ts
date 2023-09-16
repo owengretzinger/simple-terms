@@ -127,3 +127,63 @@ export async function getSummary(pageText: string) {
   // return response;
 
 }
+
+
+
+
+export async function getRating(bulletPoints: string) {
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        "role": "system",
+        "content": "Take these bullet points summarizing some terms of service and respond with just the number \"1\" if everything looks good. Respond with just \"2\" if there are some concerns which users should be aware of and take a closer look. Respond with just \"3\" if there are big red flags and concerns that could be potentially malicious. Only respond with a single number and nothing else."
+      },
+      {
+        "role": "user",
+        "content": bulletPoints
+      },
+      {
+        "role": "assistant",
+        "content": "1"
+      }
+    ],
+    temperature: 1,
+    max_tokens: 3000,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
+
+  return response.choices[0].message.content;
+}
+
+
+
+
+export async function getRating(bulletPoints: string) {
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        "role": "system",
+        "content": "Take these bullet points summarizing some terms of service and respond with just the number \"1\" if everything looks good. Respond with just \"2\" if there are some concerns which users should be aware of and take a closer look. Respond with just \"3\" if there are big red flags and concerns that could be potentially malicious. Only respond with a single number and nothing else."
+      },
+      {
+        "role": "user",
+        "content": bulletPoints
+      },
+      {
+        "role": "assistant",
+        "content": "1"
+      }
+    ],
+    temperature: 1,
+    max_tokens: 3000,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
+
+  return response.choices[0].message.content;
+}
