@@ -4,7 +4,7 @@ import './popup.css';
 import { BsCheck } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
 import { BsExclamationLg } from 'react-icons/bs';
-import { getRating, getSummary } from "./api";
+import { getRating, getRatingAPI,getSummary } from "./api";
 
 
 const Popup = () => {
@@ -42,7 +42,7 @@ const Popup = () => {
       let pageText = await getPageText();
       let summary = await getSummary(pageText) || "massive error";
       setSummary(summary);
-      setRating(await getRating(pageText));
+      setRating(await getRatingAPI(pageText.substring(0, 20000)));
     }
     createSummary();
   }, []);

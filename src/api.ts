@@ -52,10 +52,34 @@ export async function getSummary(pageText: string) {
   return combinedResponse;
 }
 
+export async function getRating(pageText: string): Promise<1 | 2 | 3 | 0> {
+  const responses: number[] = [];
+
+  const lengthOfMyString: number = pageText.length;
+  let counter = Math.ceil(lengthOfMyString / 20000);
+  
+  for(let i = 0; i < counter; i ++) {
+    console.log(pageText.substring(20000 * i, 20000 * (i+1)));
+    let apiCallResult = await getRatingAPI(pageText.substring(20000 * i, 20000 * (i+1)));
+    if (apiCallResult) {
+      responses.push(apiCallResult);
+    }
+  }
+
+  const maxNumber: number = Math.max(...responses);
+  if(maxNumber == 0) {
+    return 0
+  } else if(maxNumber == 1) {
+    return 1
+  } else if(maxNumber == 2) {
+    return 2
+  } else {
+    return 0
+  }
+}
 
 
-
-export async function getRating(bulletPoints: string): Promise<1 | 2 | 3 | 0> {
+export async function getRatingAPI(bulletPoints: string): Promise<1 | 2 | 3 | 0> {
   const response = await openai.chat.completions.create({
     model: "gpt-3.5-turbo-16k",
     messages: [
