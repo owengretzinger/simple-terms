@@ -20,7 +20,7 @@ export async function apiCall(pageText:string) {
         "content": pageText
       }
     ],
-    temperature: 1,
+    temperature: 0,
     max_tokens: 10000,
     top_p: 1,
     frequency_penalty: 0,
@@ -42,7 +42,7 @@ export async function apiCall(pageText:string) {
   //       "content": pageText
   //     }
   //   ],
-  //   temperature: 1,
+  //   temperature: 0,
   //   max_tokens: 3000,
   //   top_p: 1,
   //   frequency_penalty: 0,
@@ -151,7 +151,7 @@ export async function getRating(bulletPoints: string): Promise<1 | 2 | 3 | 0> {
         "content": "1"
       }
     ],
-    temperature: 1,
+    temperature: 0,
     max_tokens: 10000,
     top_p: 1,
     frequency_penalty: 0,
