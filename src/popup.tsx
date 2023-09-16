@@ -39,10 +39,12 @@ const Popup = () => {
 
   useEffect(() => {
     const createSummary = async () => {
+      let start = performance.now();
       let pageText = await getPageText();
-      let summary = await getSummary(pageText) || "massive error";
-      setSummary(summary);
-      setRating(await getRatingAPI(pageText.substring(0, 20000)));
+      const [termsSummary, termsRating] = await Promise.all([getSummary(pageText), getRating(pageText.substring(0, 20000))]);
+      setSummary(termsSummary);
+      setRating(termsRating);
+      console.log(`Time to get summary and rating: ${performance.now() - start}ms`);
     }
     createSummary();
   }, []);

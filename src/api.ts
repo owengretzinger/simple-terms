@@ -35,18 +35,20 @@ export async function getSummary(pageText: string) {
     return "error";
   }
 
-  const responses: string[] = [];
+  const apiCalls: Promise<string | null>[] = [];
 
   const lengthOfMyString: number = pageText.length;
   let counter = Math.ceil(lengthOfMyString / 20000);
   
   for(let i = 0; i < counter; i ++) {
     console.log(pageText.substring(20000 * i, 20000 * (i+1)));
-    let apiCallResult = await apiCall(pageText.substring(20000 * i, 20000 * (i+1)));
+    let apiCallResult = apiCall(pageText.substring(20000 * i, 20000 * (i+1)));
     if (apiCallResult) {
-      responses.push(apiCallResult);
+      apiCalls.push(apiCallResult);
     }
   }
+
+  const responses = await Promise.all(apiCalls);
 
   const combinedResponse: string = responses.join("\n");
   return combinedResponse;
