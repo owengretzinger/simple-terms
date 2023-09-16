@@ -12,7 +12,7 @@ export async function apiCall(pageText:string) {
     messages: [
       {
         "role": "system",
-        "content": "The input given should be terms and condition, a privacy policy, or something similar. Summarize the terms into concise bullet points to make it easier to understand. Be sure to highlight anything that impacts a user's privacy or rights that they should be aware of. Make sure the answer is not too long, and is easy to understand."
+        "content": "The input given should be terms and condition, a privacy policy, or something similar. Summarize the terms into concise bullet points to make it easier to understand. Make sure to include things that would be potential concerns such as waiving rights and selling data. Make sure the answer is not too long, and is easy to understand."
         // "content": "There may be some red flags in the provided terms of service/terms of privacy. Summarize some points that may be adverse to a users privacy they may not be aware of into concise bullet points to make it easier to understand. Two examples for facebook are \"Facebook stores your data whether you have an account or not. \" and \"Your identity is used in ads that are shown to other users\". Be blunt and avoid being vague."
       },
       {
@@ -87,7 +87,9 @@ export async function getSummary(pageText: string) {
 
   const responses: string[] = [];
 
-  let apiCallResult = await apiCall(pageText.substring(0,20000));
+  let apiCallResult = await apiCall(pageText);
+
+  console.log(pageText);
   
   if (apiCallResult) {
     responses.push(apiCallResult);
@@ -136,7 +138,9 @@ export async function getRating(bulletPoints: string): Promise<1 | 2 | 3 | 0> {
     messages: [
       {
         "role": "system",
-        "content": "Take these bullet points summarizing some terms of service and respond with just the number \"1\" if everything looks good. Respond with just \"2\" if there are some concerns which users should be aware of and take a closer look. Respond with just \"3\" if there are big red flags and concerns that could be potentially malicious. Only respond with a single number and nothing else."
+        "content": "The input given should be terms and condition, a privacy policy, or something similar. Respond with just a number from 1 to 10 and NOTHING ELSE. The number should represent how cautious users should be when accepting the terms. A 10 would mean that the terms are very suspicious and the user should proceed with extreme caution. A 1 would mean that the terms are very standard and the user can proceed without giving a second thought. So the higher the number, the more out of the ordinary the terms are and the more cautious the user should be. Only respond with a single number and nothing else."
+        // "content": "The input given should be terms and condition, a privacy policy, or something similar. Respond with just the number \"1\" if there is nothing users should be concerned about at all and they should accept the terms without giving a second thought. Respond with just \"2\" if there is anything that would be worth taking a closer look at. Respond with just \"3\" if there are bigger concerns such as waiving moral rights that users need to know. Only respond with a single number and nothing else."
+        // "content": "Take these bullet points summarizing some terms of service and respond with just the number \"1\" if everything looks good and there is nothing users should be concerned about at all. Respond with just \"2\" if there are some concerns which users should be aware of and take a closer look. Respond with just \"3\" if there are bigger concerns such as waiving moral rights that users need to know. Only respond with a single number and nothing else."
       },
       {
         "role": "user",
@@ -148,18 +152,20 @@ export async function getRating(bulletPoints: string): Promise<1 | 2 | 3 | 0> {
       }
     ],
     temperature: 1,
-    max_tokens: 5000,
+    max_tokens: 10000,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
   });
 
-  let ratingString = response.choices[0].message.content || "2";
-  if (ratingString === "1") {
+  let ratingString = response.choices[0].message.content || "0";
+  let rating = parseInt(ratingString);
+  console.log("rating:",ratingString);
+  if (rating < 4) {
     return 1;
-  } else if (ratingString === "2") {
+  } else if (rating > 3 && rating < 7) {
     return 2;
-  } else if (ratingString === "3") {
+  } else if (rating > 7) {
     return 3;
   } else {
     return 0;
