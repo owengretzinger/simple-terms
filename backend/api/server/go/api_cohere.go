@@ -11,11 +11,11 @@
 package openapi
 
 import (
-	"encoding/json"
+	// "encoding/json"
 	"net/http"
 	"strings"
 
-	"github.com/gorilla/mux"
+	// "github.com/gorilla/mux"
 )
 
 // CohereAPIController binds http requests to an api service and writes the service results to the http response
@@ -53,7 +53,7 @@ func (c *CohereAPIController) Routes() Routes {
 	return Routes{
 		"GetPractices": Route{
 			strings.ToUpper("Get"),
-			"/api/v3/cohere/getPractices",
+			"/cohere/getPractices",
 			c.GetPractices,
 		},
 	}
