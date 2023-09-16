@@ -27,7 +27,7 @@ export async function apiCall(pageText:string) {
     presence_penalty: 0,
   });
 
-  console.log(response.choices[0].message.content);
+  // console.log(response.choices[0].message.content);
 
   // const response2 = await openai.chat.completions.create({
   //   model: "gpt-3.5-turbo-16k",
@@ -87,13 +87,20 @@ export async function getSummary(pageText: string) {
 
   const responses: string[] = [];
 
-  let apiCallResult = await apiCall(pageText);
+  let apiCallResult = await apiCall(pageText.substring(0, 20000));
 
-  console.log(pageText);
+  const lengthOfMyString: number = pageText.length;
+  let counter = Math.ceil(lengthOfMyString / 20000);
   
-  if (apiCallResult) {
-    responses.push(apiCallResult);
+  for(let i = 0; i < counter; i ++) {
+    console.log(pageText.substring(20000 * i, 20000 * (i+1)));
+    let apiCallResult = await apiCall(pageText.substring(20000 * i, 20000 * (i+1)));
+    if (apiCallResult) {
+      responses.push(apiCallResult);
+    }
   }
+
+  // console.log(pageText);
 
   
 
