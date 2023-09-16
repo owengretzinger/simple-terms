@@ -7,7 +7,7 @@ module.exports = {
             },
         },
         fontFamily: {
-          title: ['Exo 2', 'sans-serif'],
+          title: ['Comfortaa', 'cursive'],
         }
     },
     plugins: [],
