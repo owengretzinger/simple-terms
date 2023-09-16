@@ -1,5 +1,4 @@
-[
-    [
+export const sample = [
         {
         "id": 1,
         "practice": "Facebook stores your data whether you have an account or not.",
@@ -20,5 +19,4 @@
         "practice": "This service does not track you.",
         "rating": 1
         }
-    ]
 ]
