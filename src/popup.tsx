@@ -30,12 +30,9 @@ function Popup() {
         <ul className="list-outside list-disc pl-4">
           {summary?.split('-').map((point) => {
             return (
-              point? 
               <li key={point}>
                 {point}
               </li>
-              :
-              <></>
             )
           })}
         </ul>
