@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { sample } from "./backend/sample/sample";
-import { sampleMain } from "./backend/sample/sampleMain";
 import './popup.css';
 import { BsCheck } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
@@ -39,9 +37,6 @@ const Popup = () => {
     }
   }
 
-  // const [summaryPoints, setSummaryPoints] = useState<{ rating: number, text: string }[]>();
-  // const [mainPoint, setMainPoint] = useState<{ rating: number, text: string }[]>();
-
   useEffect(() => {
     const createSummary = async () => {
       let pageText = await getPageText();
@@ -52,23 +47,8 @@ const Popup = () => {
     createSummary();
   }, []);
 
-  // useEffect(() => {
-  //   setSummaryPoints(
-  //     sample.map((bullet) => {
-  //       return { rating: bullet.rating, text: bullet.practice };
-  //     })
-  //   );
-
-  //   setMainPoint(
-  //     sampleMain.map((main) => {
-  //       return { rating: main.rating, text: main.practice };
-  //     })
-  //   );
-  // }, []);
-
   return (
     <>
-      {/* summary?.substring(1).split('\n-').map((point) => { */}
       <div className="w-[600px] min-h-[300px] h-fit p-6 bg-white md:w-auto text-sm flex flex-col">
         <h1 className="text-xl font-bold mb-6 text-center font-title">Simple Terms</h1>
         {rating !== 0 ?
@@ -99,9 +79,7 @@ const Popup = () => {
             <span className="sr-only">Loading...</span>
           </div>
           </div>
-
         }
-
       </div>
     </>
   );
