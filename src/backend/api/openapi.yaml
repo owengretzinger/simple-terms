@@ -66,10 +66,6 @@ paths:
                   $ref: '#/components/schemas/PracticeList'          
         '400':
           description: Invalid status value
-      security:
-        - petstore_auth:
-            - write:pets
-            - read:pets
   # /pet/findByTags:
   #   get:
   #     tags:
@@ -534,6 +530,15 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Practice'
+      example:
+      -   # First object
+          id: 1
+          practice: "Facebook stores your data whether you have an account or not."
+          rating: 0
+      -   # Second object
+          id: 2
+          practice: "Use strong and unique passwords for online accounts."
+          rating: 1
   #   Order:
   #     type: object
   #     properties:
@@ -722,16 +727,3 @@ components:
   #           type: array
   #           items:
   #             $ref: '#/components/schemas/User'
-  securitySchemes:
-    petstore_auth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
-          scopes:
-            write:pets: modify pets in your account
-            read:pets: read your pets
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
