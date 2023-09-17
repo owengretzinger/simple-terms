@@ -2,3 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap');
+
+html {
+  scrollbar-gutter: stable both-edges;
+}
+
+.fade-in-image-one { animation: fadeIn 1.5s; }
+.fade-in-image-two { animation: fadeIn 2s; }
+.fade-in-image-three { animation: fadeIn 2.5s; }
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }

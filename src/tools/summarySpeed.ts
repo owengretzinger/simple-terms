@@ -19,7 +19,6 @@ export function timeDifferenceStringFromText(
   text1: string,
   text2: string
 ): string {
-  // return "5 minutes";
   const time1 = countWords(text1) / readingSpeed;
   console.log(countWords(text1));
   console.log(time1);

@@ -9,8 +9,10 @@ import { timeDifferenceStringFromText } from "./tools/summarySpeed";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "preloadSummary") {
-    preloadSummary(message.args.pageText);
+    setTimeout(() => {
+      preloadSummary(message.args.pageText);
     sendResponse({ status: "success" });
+    }, 1000)
   }
 });
 
