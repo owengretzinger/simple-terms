@@ -103,7 +103,7 @@ const Popup = () => {
               </ul>
             </div>
 
-            <div className="top-0 left-0 right-8 bottom-6 fixed flex justify-center items-end fade-in-image-three">
+            <div className="top-0 left-0 right-8 bottom-6 fixed flex justify-center items-end fade-in-image-three pointer-events-none">
               <div className="p-2 rounded-lg outline outline-1 outline-teal-500 bg-teal-50">
                 <p className=""><em>This summary saves you {timeTaken}!</em>🔥</p>
               </div>
