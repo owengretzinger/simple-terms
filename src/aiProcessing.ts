@@ -20,7 +20,7 @@ async function openAiApiCall(prompt: string, input: string) {
         content: input,
       },
     ],
-    temperature: 0.1,
+    temperature: 0,
     max_tokens: 500,
     top_p: 1,
     frequency_penalty: 0,
@@ -70,7 +70,7 @@ export async function getRating(pageText: string) {
   for (let segment of segmentText(pageText)) {
     apiCalls.push(
       openAiApiCall(
-        "The input given should be terms and condition, a privacy policy, or something similar. Respond with just a number from 1 to 10 and NOTHING ELSE. The number should represent how cautious users should be when accepting the terms. A 10 would mean that the terms are very suspicious and the user should proceed with extreme caution. A 1 would mean that the terms are very standard and the user can proceed without giving a second thought. So the higher the number, the more out of the ordinary the terms are and the more cautious the user should be. Storing data even if the user doesn't have an account, using users' identity in ads, reading private messages, and signing away moral rights are examples of things that would result in high numbers. Not tracking the user, not having to register, IP addresses not being tracked, and not recording any identifiable information are examples of things that would result in low numbers. Only respond with a single number and nothing else.",
+        "You will be given terms and condition, a privacy policy, or something similar. Respond with just a number from 1 to 10 and NOTHING ELSE. The number should represent how concerned users should be when accepting the terms. A 10 would mean that the terms are very concerning and the user should proceed with extreme caution. A 1 would mean that the terms are very standard and the user can proceed without giving a second thought. So the higher the number, the more out of the ordinary the terms are and the more cautious the user should be. Storing data even if the user doesn't have an account, using users' identity in ads, reading private messages, and signing away moral rights are examples of things that would result in high numbers. Not tracking the user, not having to register, IP addresses not being tracked, and not recording any identifiable information are examples of things that would result in low numbers. Only respond with a single number and nothing else.",
         segment
       )
     );
