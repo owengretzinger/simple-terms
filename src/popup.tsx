@@ -43,7 +43,7 @@ const Popup = () => {
     const createSummary = async () => {
       let start = performance.now();
       let pageText = await getPageText();
-      // const [termsSummary, termsRating] = await Promise.all([getSummary(pageText), getRating(pageText)]);
+      // // const [termsSummary, termsRating] = await Promise.all([getSummary(pageText), getRating(pageText)]);
       let termsSummary = `- Apple may charge your selected payment method for any paid transactions, including taxes, and may attempt to charge your other eligible payment methods if your primary payment method cannot be charged.\n-
       Apple is not responsible for any losses arising from the unauthorized use of your account.\n-
       Apple may collect and use technical data and related information about your device for various purposes.\n-
@@ -55,11 +55,21 @@ const Popup = () => {
       Apple does not guarantee that the services will be uninterrupted or error-free and may remove the services for indefinite periods of time without notice.\n-
       Apple is not responsible for third-party materials included within or linked from the content or services.\n-
       Apple disclaims all warranties and limits its liability for any damages arising from your use of the services, including but not limited to any errors or omissions in the content.`
-      setSummary(termsSummary);
-      setTimeout(() => {
-        setRating(2);
+
+      chrome.storage.local.get(["key1", "key2"]).then((result) => {
+        // console.log("Summary value " + result.key1);
+        // console.log("Rating value " + result.key2);
+        const termsSummary = result.key1;
+        const termsRating = result.key2;
+        setSummary(termsSummary);
+        setTimeout(() => {
+        setRating(termsRating);
       }, 0);
-      setTimeTaken(timeDifferenceStringFromText(pageText, termsSummary));
+
+        setTimeTaken(timeDifferenceStringFromText(pageText, termsSummary));
+      });
+
+      
       console.log(`Time to get summary and rating: ${performance.now() - start}ms`);
     }
     createSummary();
