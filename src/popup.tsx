@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import './popup.css';
+import './fade.css';
 import { BsCheck, BsGithub } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
 import { BsExclamationLg } from 'react-icons/bs';
@@ -12,7 +13,6 @@ const Popup = () => {
   const [rating, setRating] = useState<1 | 2 | 3 | 0>(0);
   const [timeTaken, setTimeTaken] = useState<string>("")
   const [storageData, setStorageData] = useState<any>({});
-
   const ratingInfo = {
     1: {
       message: "These terms don't contain anything out of the ordinary!",
@@ -72,14 +72,29 @@ const Popup = () => {
         <a href="https://github.com/owengretzinger/simple-terms" target="_blank" className="absolute top-0 right-0 p-2">
           <BsGithub className="w-6 h-6" />
         </a>
-        <h1 className="text-xl font-bold mb-4 text-center font-title">Simple Terms</h1>
+          <div className = "fade-in-image-one"> 
+            <h1 className={`text-xl font-bold mb-2 text-center font-title`}>Simple Terms</h1>
+          </div>
         {rating !== 0 && summary !== "" ?
-          <div className="flex justify-items-start w-full flex-col gap-4 pb-12">
-            <div className={`items-center rounded-lg outline outline-1 ${ratingInfo[rating].divClass}`}>
-              <span className="flex flex-row items-center">
-                {ratingInfo[rating].icon({ className: `${ratingInfo[rating].textClass} h-10 w-10` })}
-                {ratingInfo[rating].message}
-              </span>
+          <div className = "fade-in-image-one">
+            <div className="flex justify-items-start w-full flex-col gap-4 pb-5">
+              <div className={`items-center rounded-lg outline outline-1 ${ratingInfo[rating].divClass}`}>
+                <span className="flex flex-row items-center">
+                  {ratingInfo[rating].icon({ className: `${ratingInfo[rating].textClass} h-10 w-10` })}
+                  {ratingInfo[rating].message}
+                </span>
+              </div>
+            </div>
+            <div className = "fade-in-image-two"> 
+              <ul className="list-outside list-disc pl-4">
+                {summary?.substring(1).split('\n-').map((point, i) => {
+                  return (
+                    <li key={i}>
+                      {point}
+                    </li>
+                  )
+                })}
+              </ul>
             </div>
             <ul className="list-outside list-disc pl-4">
               {summary?.substring(1).split('\n-').map((point, i) => {
@@ -108,6 +123,14 @@ const Popup = () => {
           </div>
         }
       </div>
+      <div className = "fade-in-image-three"> 
+        <div className="top-0 left-0 right-0 bottom-0 fixed">
+          <div className="absolute bottom-0 right-0 m-6 p-2 rounded-lg outline outline-1 outline-teal-500 bg-teal-50">
+            <p className=""><em>This summary saves you {timeTaken}!</em>🔥</p>
+          </div>
+        </div>
+      </div>
+
     </>
   );
 };
