@@ -12,7 +12,7 @@ const Popup = () => {
   const [rating, setRating] = useState<1 | 2 | 3 | 0>(0);
   const ratingInfo = {
     1: {
-      message: "These terms are not overly suspicious.",
+      message: "These terms don't contain anything out of the ordinary!",
       divClass: "outline-green-500 bg-green-100",
       textClass: "text-green-500",
       icon: BsCheck,
@@ -24,7 +24,7 @@ const Popup = () => {
       icon: BsExclamationLg,
     },
     3: {
-      message: "There are some potentially dangerous or malicious terms. Please review them and proceed with caution.",
+      message: "There are some concerning terms. Please review them carefully.",
       divClass: "outline-red-500 bg-red-100",
       textClass: "text-red-500",
       icon: RxCross2,
@@ -41,7 +41,7 @@ const Popup = () => {
     const createSummary = async () => {
       let start = performance.now();
       let pageText = await getPageText();
-      const [termsSummary, termsRating] = await Promise.all([getSummary(pageText), getRating(pageText.substring(0, 20000))]);
+      const [termsSummary, termsRating] = await Promise.all([getSummary(pageText), getRating(pageText)]);
       setSummary(termsSummary);
       setRating(termsRating);
       console.log(`Time to get summary and rating: ${performance.now() - start}ms`);
@@ -53,7 +53,7 @@ const Popup = () => {
     <>
       <div className="w-[600px] min-h-[300px] h-fit p-6 bg-white md:w-auto text-sm flex flex-col">
         <h1 className="text-xl font-bold mb-6 text-center font-title">Simple Terms</h1>
-        {rating !== 0 ?
+        {rating !== 0 && summary !== "" ?
           <div className="flex justify-items-start w-full flex-col gap-4">
             <div className={`items-center rounded-lg outline outline-1 ${ratingInfo[rating].divClass}`}>
               <span className="flex flex-row items-center">
@@ -62,9 +62,9 @@ const Popup = () => {
               </span>
             </div>
             <ul className="list-outside list-disc pl-4">
-              {summary?.substring(1).split('\n-').map((point) => {
+              {summary?.substring(1).split('\n-').map((point, i) => {
                 return (
-                  <li key={point}>
+                  <li key={i}>
                     {point}
                   </li>
                 )
