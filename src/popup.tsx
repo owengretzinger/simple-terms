@@ -5,11 +5,13 @@ import { BsCheck } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
 import { BsExclamationLg } from 'react-icons/bs';
 import { getRating, getSummary } from "./aiProcessing";
+import { timeDifferenceStringFromText } from "./tools/summarySpeed"
 
 
 const Popup = () => {
   const [summary, setSummary] = useState<string>("");
   const [rating, setRating] = useState<1 | 2 | 3 | 0>(0);
+  const [timeTaken, setTimeTaken] = useState<string>("")
   const ratingInfo = {
     1: {
       message: "These terms are not overly suspicious.",
@@ -42,9 +44,11 @@ const Popup = () => {
       let start = performance.now();
       let pageText = await getPageText();
       const [termsSummary, termsRating] = await Promise.all([getSummary(pageText), getRating(pageText.substring(0, 20000))]);
+      
       setSummary(termsSummary);
       setRating(termsRating);
-      console.log(`Time to get summary and rating: ${performance.now() - start}ms`);
+      setTimeTaken(timeDifferenceStringFromText(pageText, termsSummary));
+      // console.log(`Time to get summary and rating: ${performance.now() - start}ms`);
     }
     createSummary();
   }, []);
@@ -60,6 +64,9 @@ const Popup = () => {
                 {ratingInfo[rating].icon({ className: `${ratingInfo[rating].textClass} h-10 w-10` })}
                 {ratingInfo[rating].message}
               </span>
+            </div>
+            <div className="flex justify-end">
+              <p className="text-xs">This summary saves you {timeTaken}!</p>
             </div>
             <ul className="list-outside list-disc pl-4">
               {summary?.substring(1).split('\n-').map((point) => {
