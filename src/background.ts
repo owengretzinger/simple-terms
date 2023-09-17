@@ -1,14 +1,41 @@
 import { getRating, getSummary } from "./aiProcessing";
+import { getCurrentTab } from "./tools/getCurrentTab";
+import { timeDifferenceStringFromText } from "./tools/summarySpeed";
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-    if (message.action === 'fetchData') {
-        const [termsSummary, termsRating] = await Promise.all([getSummary(message.pageText), getRating(message.pageText.substring(0, 20000))]);
-        
-        chrome.storage.local.set({ key: termsSummary }).then(() => {
-            console.log("Value is set");
-          });
-        
+// chrome.runtime.onStartup.addListener(function() {
+//   console.log('open');
+// })
+// chrome.storage.local.clear();
 
-      return true;
-    }
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "preloadSummary") {
+    preloadSummary(message.args.pageText);
+    sendResponse({ status: "success" });
+  }
+});
+
+async function preloadSummary(pageText: string) {
+  console.log("preloading");
+  const [termsSummary, termsRating] = await Promise.all([
+    getSummary(pageText),
+    getRating(pageText),
+  ]);
+
+  let currentTab = await getCurrentTab();
+  await chrome.storage.local.set({
+    [currentTab]: {
+      summary: termsSummary,
+      rating: termsRating,
+      timeTaken: timeDifferenceStringFromText(pageText, termsSummary),
+    },
   });
+
+  console.log("preloaded");
+}
+
+chrome.windows.onCreated.addListener(async () => {
+  chrome.storage.local.clear();
+});
+chrome.runtime.onInstalled.addListener(async () => {
+  chrome.storage.local.clear();
+});

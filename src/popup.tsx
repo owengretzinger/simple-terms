@@ -4,14 +4,15 @@ import './popup.css';
 import { BsCheck, BsGithub } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
 import { BsExclamationLg } from 'react-icons/bs';
-import { getRating, getSummary } from "./aiProcessing";
-import { timeDifferenceStringFromText } from "./tools/summarySpeed"
+import { getCurrentTab } from "./tools/getCurrentTab";
 
 
 const Popup = () => {
   const [summary, setSummary] = useState<string>("");
   const [rating, setRating] = useState<1 | 2 | 3 | 0>(0);
   const [timeTaken, setTimeTaken] = useState<string>("")
+  const [storageData, setStorageData] = useState<any>({});
+
   const ratingInfo = {
     1: {
       message: "These terms don't contain anything out of the ordinary!",
@@ -41,39 +42,29 @@ const Popup = () => {
 
   useEffect(() => {
     const createSummary = async () => {
-      let start = performance.now();
-      let pageText = await getPageText();
-      // // const [termsSummary, termsRating] = await Promise.all([getSummary(pageText), getRating(pageText)]);
-      let termsSummary = `- Apple may charge your selected payment method for any paid transactions, including taxes, and may attempt to charge your other eligible payment methods if your primary payment method cannot be charged.\n-
-      Apple is not responsible for any losses arising from the unauthorized use of your account.\n-
-      Apple may collect and use technical data and related information about your device for various purposes.\n-
-      Apple does not guarantee that the services will be uninterrupted or error-free and may remove the services for indefinite periods of time without notice.\n-
-      Apple is not responsible for third-party materials included within or linked from the content or services.\n-
-      Apple disclaims all warranties and limits its liability for any damages arising from your use of the services, including but not limited to any errors or omissions in the content.\n-
-      Apple is not responsible for any losses arising from the unauthorized use of your account.\n-
-      Apple may collect and use technical data and related information about your device for various purposes.\n-
-      Apple does not guarantee that the services will be uninterrupted or error-free and may remove the services for indefinite periods of time without notice.\n-
-      Apple is not responsible for third-party materials included within or linked from the content or services.\n-
-      Apple disclaims all warranties and limits its liability for any damages arising from your use of the services, including but not limited to any errors or omissions in the content.`
-
-      chrome.storage.local.get(["key1", "key2"]).then((result) => {
-        // console.log("Summary value " + result.key1);
-        // console.log("Rating value " + result.key2);
-        const termsSummary = result.key1;
-        const termsRating = result.key2;
-        setSummary(termsSummary);
-        setTimeout(() => {
-        setRating(termsRating);
-      }, 0);
-
-        setTimeTaken(timeDifferenceStringFromText(pageText, termsSummary));
-      });
-
-      
-      console.log(`Time to get summary and rating: ${performance.now() - start}ms`);
+      let currentTab = await getCurrentTab();
+      let summaryObject = await chrome.storage.local.get({ [currentTab]: null });
+      if (summaryObject[currentTab] !== null) {
+        let summaryInfo = summaryObject[currentTab];
+        setSummary(summaryInfo.summary);
+        setRating(summaryInfo.rating);
+        setTimeTaken(summaryInfo.timeTaken);
+      } else {
+        setSummary("");
+        setRating(0);
+        setTimeTaken("");
+      }
     }
     createSummary();
-  }, []);
+  }, [storageData]);
+
+  chrome.storage.onChanged.addListener(async function (changes, namespace) {
+    console.log('storage changed');
+    let currentTab = await getCurrentTab();
+    if (currentTab in changes) {
+      setStorageData(changes[currentTab].newValue);
+    }
+  });
 
   return (
     <>
@@ -90,9 +81,6 @@ const Popup = () => {
                 {ratingInfo[rating].message}
               </span>
             </div>
-            {/* <div className="flex justify-end">
-              <p className="italic">This summary saves you {timeTaken}!</p>
-            </div> */}
             <ul className="list-outside list-disc pl-4">
               {summary?.substring(1).split('\n-').map((point, i) => {
                 return (
@@ -102,6 +90,11 @@ const Popup = () => {
                 )
               })}
             </ul>
+            <div className="top-0 left-0 right-0 bottom-0 fixed">
+              <div className="absolute bottom-0 right-0 m-6 p-2 rounded-lg outline outline-1 outline-teal-500 bg-teal-50">
+                <p className=""><em>This summary saves you {timeTaken}!</em>🔥</p>
+              </div>
+            </div>
           </div>
           :
           <div className="w-full h-full flex-grow flex justify-center items-center">
@@ -115,32 +108,31 @@ const Popup = () => {
           </div>
         }
       </div>
-      <div className="top-0 left-0 right-0 bottom-0 fixed">
-        <div className="absolute bottom-0 right-0 m-6 p-2 rounded-lg outline outline-1 outline-teal-500 bg-teal-50">
-          <p className=""><em>This summary saves you {timeTaken}!</em>🔥</p>
-        </div>
-      </div>
     </>
   );
 };
 
+// chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
-async function getPageText(): Promise<string> {
-  let [currentTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-  if (!currentTab) {
-    return "error";
-  }
-  return new Promise((resolve, reject) => {
-    chrome.tabs.sendMessage(currentTab.id!, { getContent: true }, (response) => {
-      if (response) {
-        resolve(response)
-      }
-      else {
-        reject(response)
-      }
-    });
-  })
-}
+// });
+
+
+// async function getPageText(): Promise<string> {
+//   let [currentTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+//   if (!currentTab) {
+//     return "error";
+//   }
+//   return new Promise((resolve, reject) => {
+//     chrome.tabs.sendMessage(currentTab.id!, { getContent: true }, (response) => {
+//       if (response) {
+//         resolve(response)
+//       }
+//       else {
+//         reject(response)
+//       }
+//     });
+//   })
+// }
 
 const root = createRoot(document.getElementById("root")!);
 

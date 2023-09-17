@@ -31,6 +31,17 @@ async function openAiApiCall(prompt: string, input: string) {
 }
 
 export async function getSummary(pageText: string) {
+  // return `- Apple may charge your selected payment method for any paid transactions, including taxes, and may attempt to charge your other eligible payment methods if your primary payment method cannot be charged.\n-
+  // Apple is not responsible for any losses arising from the unauthorized use of your account.\n-
+  // Apple may collect and use technical data and related information about your device for various purposes.\n-
+  // Apple does not guarantee that the services will be uninterrupted or error-free and may remove the services for indefinite periods of time without notice.\n-
+  // Apple is not responsible for third-party materials included within or linked from the content or services.\n-
+  // Apple disclaims all warranties and limits its liability for any damages arising from your use of the services, including but not limited to any errors or omissions in the content.\n-
+  // Apple is not responsible for any losses arising from the unauthorized use of your account.\n-
+  // Apple may collect and use technical data and related information about your device for various purposes.\n-
+  // Apple does not guarantee that the services will be uninterrupted or error-free and may remove the services for indefinite periods of time without notice.\n-
+  // Apple is not responsible for third-party materials included within or linked from the content or services.\n-
+  // Apple disclaims all warranties and limits its liability for any damages arising from your use of the services, including but not limited to any errors or omissions in the content.`
   const apiCalls: Promise<string | null>[] = [];
   const textSegments = segmentText(pageText);
   const maxNumberOfResults = 
@@ -54,6 +65,7 @@ export async function getSummary(pageText: string) {
 }
 
 export async function getRating(pageText: string) {
+  // return 2;
   const apiCalls: Promise<string | null>[] = [];
   for (let segment of segmentText(pageText)) {
     apiCalls.push(
@@ -65,10 +77,6 @@ export async function getRating(pageText: string) {
   }
   const responses = await Promise.all(apiCalls);
 
-  console.log(responses);
-  for (let response of responses) {
-    console.log(response);
-  }
   const maxNumber: number = Math.max(
     ...responses.map((response) => parseInt(response || "0"))
   );
