@@ -72,9 +72,7 @@ const Popup = () => {
         <a href="https://github.com/owengretzinger/simple-terms" target="_blank" className="absolute top-0 right-0 p-2">
           <BsGithub className="w-6 h-6" />
         </a>
-          <div className = "fade-in-image-one"> 
             <h1 className={`text-xl font-bold mb-2 text-center font-title`}>Simple Terms</h1>
-          </div>
         {rating !== 0 && summary !== "" ?
           <div className = "fade-in-image-one">
             <div className="flex justify-items-start w-full flex-col gap-4 pb-5">
@@ -95,7 +93,6 @@ const Popup = () => {
                   )
                 })}
               </ul>
-            </div>
             <ul className="list-outside list-disc pl-4">
               {summary?.substring(1).split('\n-').map((point, i) => {
                 return (
@@ -105,10 +102,13 @@ const Popup = () => {
                 )
               })}
             </ul>
+            </div>
+            <div className = "fade-in-image-three"> 
             <div className="top-0 left-0 right-0 bottom-0 fixed">
               <div className="absolute bottom-0 right-0 m-6 p-2 rounded-lg outline outline-1 outline-teal-500 bg-teal-50">
                 <p className=""><em>This summary saves you {timeTaken}!</em>🔥</p>
               </div>
+            </div>
             </div>
           </div>
           :
@@ -123,13 +123,13 @@ const Popup = () => {
           </div>
         }
       </div>
-      <div className = "fade-in-image-three"> 
+      {/* <div className = "fade-in-image-three"> 
         <div className="top-0 left-0 right-0 bottom-0 fixed">
           <div className="absolute bottom-0 right-0 m-6 p-2 rounded-lg outline outline-1 outline-teal-500 bg-teal-50">
             <p className=""><em>This summary saves you {timeTaken}!</em>🔥</p>
           </div>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
 
     </>
   );
